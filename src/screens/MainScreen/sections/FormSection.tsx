@@ -36,23 +36,23 @@ export const FormSection = (): JSX.Element => {
     try {
       setIsSubmitting(true);
       setSubmitError(null);
-      
+
       // URLパラメータから追加情報を取得
       const searchParams = new URLSearchParams(window.location.search);
       const ageParam = searchParams.get('age');
       const rentParam = searchParams.get('rent');
       const incomeParam = searchParams.get('income');
-      
+
       // 追加情報をフォームデータに追加
       const formData = {
         ...data,
         age: ageParam || undefined,
         rent: rentParam || undefined,
-        annualIncome: incomeParam || undefined
+        annualIncome: incomeParam || undefined,
       };
-      
+
       console.log('送信データ:', formData);
-      
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -60,12 +60,12 @@ export const FormSection = (): JSX.Element => {
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'お問い合わせの送信に失敗しました');
       }
-      
+
       // 送信成功
       setSubmitSuccess(true);
       reset(); // フォームをリセット
@@ -80,22 +80,9 @@ export const FormSection = (): JSX.Element => {
   return (
     <div className="flex w-full flex-col items-center gap-6 px-8">
       <div className="w-full space-y-10">
-        <div className="w-full space-y-4 text-center">
-          <p className="text-text tracking-0 text-center text-[32px] font-bold leading-[44.8px]">
-            専門家に
-            <br />
-            <UnderlinedText>無料相談</UnderlinedText>ができます
-          </p>
-          <p className="text-center text-sm leading-[160%] tracking-widest">
-            お家に関わる「将来資金対策」を
-            <br />
-            丁寧にサポートします
-          </p>
-        </div>
-        
         {submitSuccess ? (
           <div className="rounded-lg bg-green-50 p-4 text-center">
-            <p className="text-green-700 text-base font-medium">
+            <p className="text-base font-medium text-green-700">
               お問い合わせありがとうございます。担当者より連絡させていただきます。
             </p>
           </div>
@@ -113,7 +100,9 @@ export const FormSection = (): JSX.Element => {
                   <Badge
                     className={`${field.required ? 'bg-primary' : 'bg-[#eeeeee]'} rounded-[2px] px-2 py-0 shadow-none`}
                   >
-                    <span className={`w-fit text-center text-xs leading-[18.6px] tracking-[1.20px]`}>
+                    <span
+                      className={`w-fit text-center text-xs leading-[18.6px] tracking-[1.20px]`}
+                    >
                       {field.required ? '必須' : '任意'}
                     </span>
                   </Badge>
@@ -127,7 +116,7 @@ export const FormSection = (): JSX.Element => {
                   } bg-white px-4 py-2.5 text-base leading-[28.8px]`}
                 />
                 {errors[field.id as keyof FormValues] && (
-                  <p className="text-red-500 mt-1 text-sm">
+                  <p className="mt-1 text-sm text-red-500">
                     {errors[field.id as keyof FormValues]?.message}
                   </p>
                 )}
@@ -155,9 +144,11 @@ export const FormSection = (): JSX.Element => {
                   errors.message ? 'border-red-500' : 'border-[#999999]'
                 } bg-white px-4 py-2.5`}
               />
-              {errors.message && <p className="text-red-500 mt-1 text-sm">{errors.message.message}</p>}
+              {errors.message && (
+                <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>
+              )}
             </div>
-            
+
             <div className="flex w-full flex-col items-center gap-3">
               <a
                 href="https://mr-mr.jp/privacy/"
@@ -168,7 +159,7 @@ export const FormSection = (): JSX.Element => {
                 プライバシーポリシーについて
               </a>
               <CTAButton
-                text={isSubmitting ? '送信中...' : '送信する'}
+                text={isSubmitting ? '送信中...' : '上記に同意して申し込む'}
                 badgeText="無料"
                 onSubmit={handleSubmit(onSubmit)}
                 disabled={isSubmitting}
@@ -177,15 +168,13 @@ export const FormSection = (): JSX.Element => {
 
             {submitError && (
               <div className="rounded-lg bg-red-50 p-4">
-                <p className="text-red-500 text-sm font-bold">
-                  {submitError}
-                </p>
+                <p className="text-sm font-bold text-red-500">{submitError}</p>
               </div>
             )}
-            
+
             {Object.keys(errors).length > 0 && (
               <div className="rounded-lg bg-red-50 p-4">
-                <p className="text-red-500 text-sm font-bold">
+                <p className="text-sm font-bold text-red-500">
                   入力内容に誤りがあります。確認してください。
                 </p>
               </div>

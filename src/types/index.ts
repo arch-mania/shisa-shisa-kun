@@ -24,3 +24,9 @@ export type ActionData = {
   success: boolean;
   message?: string;
 };
+
+export type RentOption = {
+  value: string;
+  label: string;
+  numberValue: string;
+};

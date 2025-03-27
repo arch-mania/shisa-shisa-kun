@@ -52,7 +52,7 @@ export const ProblemSection = (): JSX.Element => {
         </div>
 
         <div className="space-y-4 text-center">
-          <p className="text-lg leading-[160%]">
+          <p className="tracking-0 text-lg font-bold leading-[160%]">
             決める前に、知ってほしい。
             <br />
             <UnderlinedText>「なんとなく」から抜け出そう。</UnderlinedText>

@@ -1,5 +1,5 @@
 import { sendEmail } from '../lib/email.server';
-import { FormData } from '../types/contact';
+import { FormData } from '../types';
 
 class EmailError extends Error {
   constructor(

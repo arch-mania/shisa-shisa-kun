@@ -10,7 +10,7 @@ export const YellowCard = ({ headerText, contentText, imageSrc }: YellowCardProp
   return (
     <Card className="w-full rounded-2xl border-2 border-solid border-[#eebb00]">
       <div className="flex h-[46px] w-full items-center justify-center rounded-t-[14px] border-b-2 border-solid border-[#eebb00] bg-[#fff5b8]">
-        <div className="tracking-0 whitespace-nowrap text-center text-lg leading-[18px]">
+        <div className="tracking-0 whitespace-nowrap text-center text-lg font-bold leading-[18px]">
           {headerText}
         </div>
       </div>

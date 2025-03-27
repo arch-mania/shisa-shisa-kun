@@ -1,3 +1,4 @@
+import { CTAButton } from '../../../components/features/CTAButton';
 import { UnderlinedText } from '../../../components/ui/underline-text';
 import { YellowCard } from '../../../components/ui/yellow-card/YellowCard';
 
@@ -9,7 +10,7 @@ export const SolutionSection = (): JSX.Element => {
           日本人の住まいを比較すると…
         </p>
         <div className="relative w-full text-center">
-          <p className="text-text tracking-0 text-center text-[32px] leading-[44.8px]">
+          <p className="tracking-0 text-center text-[32px] font-bold leading-[44.8px] text-text">
             実は<UnderlinedText>6割以上</UnderlinedText>が
             <br />
             持ち家
@@ -26,7 +27,7 @@ export const SolutionSection = (): JSX.Element => {
           しかも、マイホーム購入時の年齢は
         </p>
         <div className="relative w-full text-center">
-          <p className="text-text tracking-0 text-center text-[32px] leading-[44.8px]">
+          <p className="tracking-0 text-center text-[32px] font-bold leading-[44.8px] text-text">
             30代が<UnderlinedText>半分以上</UnderlinedText>を
             <br />
             占める
@@ -41,7 +42,7 @@ export const SolutionSection = (): JSX.Element => {
         />
         <div className="mt-12 w-full">
           <div className="relative mb-6 text-center">
-            <div className="tracking-0 whitespace-nowrap text-center text-base leading-[25.6px]">
+            <div className="tracking-0 whitespace-nowrap text-center text-base font-semibold leading-[25.6px]">
               なぜ持ち家にする人が多い？
             </div>
             <img
@@ -65,7 +66,7 @@ export const SolutionSection = (): JSX.Element => {
                   <p className="tracking-0 text-2xl font-bold leading-[140%]">
                     賃貸よりも
                     <br />
-                    <UnderlinedText>安くなるから</UnderlinedText>
+                    <UnderlinedText>「安く」なるから</UnderlinedText>
                   </p>
                 </div>
               </>
@@ -73,11 +74,45 @@ export const SolutionSection = (): JSX.Element => {
             imageSrc="/human.png"
           />
         </div>
+      </div>
+      <div className="relative mt-[120px] space-y-6 bg-[#EEEEEE] pb-8 pt-6">
+        <div className="relative z-10 flex flex-col items-center gap-y-3">
+          <p className="text-center text-2xl font-bold leading-[160%] tracking-widest">
+            あなたにとって
+            <br />
+            ベストな選択を！
+          </p>
+          <p className="text-center text-sm leading-[160%] tracking-widest">
+            必ずしも「持ち家」がいいとは限りません
+            <br />
+            人によっては「賃貸」の方が
+            <br />
+            おすすめという場合もあります
+          </p>
+          <img
+            src="/worry-person.svg"
+            alt=""
+            className="h-[159px] w-[114px]"
+            width={114}
+            height={159}
+          />
+        </div>
+        <div className="space-y-4">
+          <p className="text-center text-lg font-bold leading-[160%] tracking-widest">
+            資産を総合的に判断して、
+            <br />
+            ベストな選択をしましょう
+          </p>
+          <CTAButton text="まずは診断する" />
+        </div>
+        <div className="absolute -top-10 left-1/2 aspect-square w-[90%] -translate-x-1/2 rounded-full bg-white" />
+      </div>
+      <div className="flex flex-col items-center gap-y-2 px-4 py-12 pb-10">
         <div className="relative mt-[120px] w-full text-center">
-          <p className="text-text tracking-0 text-center text-[32px] leading-[44.8px]">
+          <p className="tracking-0 text-center text-[32px] font-bold leading-[44.8px] text-text">
             毎月の家賃が
             <br />
-            <UnderlinedText>「5万円以上」なら</UnderlinedText>
+            <UnderlinedText>「4万円以上」なら</UnderlinedText>
             <br />
             ぜひ見直しを！
           </p>
