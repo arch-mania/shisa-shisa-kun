@@ -1,14 +1,26 @@
-import react from "@vitejs/plugin-react";
-import tailwind from "tailwindcss";
-import { defineConfig } from "vite";
+import { vitePlugin as remix } from '@remix-run/dev';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  base: "./",
-  css: {
-    postcss: {
-      plugins: [tailwind()],
+  plugins: [
+    remix({
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+      },
+    }),
+    tsconfigPaths(),
+  ],
+  server: {
+    port: 3000,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
     },
   },
 });
