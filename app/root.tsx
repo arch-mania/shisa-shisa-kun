@@ -1,25 +1,23 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
+import { Meta, Links, Outlet, Scripts, useLoaderData, ScrollRestoration } from '@remix-run/react';
 import type { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useEffect } from 'react';
 
 import tailwind from '~/tailwind.css?url';
 
-// 環境変数をクライアントに公開する型定義
 type LoaderData = {
   ENV: {
     RECAPTCHA_SITE_KEY: string;
   };
 };
 
-// 環境変数をクライアントに公開する
-export const loader: LoaderFunction = () => {
-  return json({
+export const loader: LoaderFunction = () =>
+  json({
     ENV: {
-      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+      RECAPTCHA_SITE_KEY:
+        process.env.RECAPTCHA_SITE_KEY || '6LcR_TAoAAAAAJjM3b_QGYkLXYPzkzODh8gmT8Tx',
     },
   });
-};
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tailwind },
@@ -35,7 +33,6 @@ export const links: LinksFunction = () => [
   },
 ];
 
-// reCAPTCHAスクリプトをクライアントサイドで読み込むための関数
 function loadRecaptchaScript() {
   if (typeof window !== 'undefined' && !document.querySelector('script[src*="recaptcha"]')) {
     const script = document.createElement('script');
@@ -50,24 +47,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <head>
-        {/* <script
-          async
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-MNLTS37R');
-`,
-          }}
-        /> */}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body className="bg-secondary">
-        <noscript></noscript>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -79,7 +64,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 export default function App() {
   const data = useLoaderData<LoaderData>();
 
-  // クライアントサイドでのみreCAPTCHAスクリプトを読み込む
   useEffect(() => {
     loadRecaptchaScript();
   }, []);

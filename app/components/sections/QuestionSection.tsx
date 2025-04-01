@@ -1,18 +1,11 @@
-import { CTAButton } from '../../../components/features/CTAButton';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../../components/ui/select';
-import { Separator } from '../../../components/ui/separator';
 import { useState } from 'react';
-import { RENT_OPTIONS } from '../../../constants';
 import { z } from 'zod';
-import { UnderlinedText } from '../../../components/ui/underline-text';
+import { Select, SelectItem, SelectValue, SelectContent, SelectTrigger } from '../ui/select';
+import { Separator } from '../ui/separator';
+import { RENT_OPTIONS } from '../../constants';
+import { UnderlinedText } from '../ui/underline-text';
+import { CTAButton } from '../features/CTAButton';
 
-// バリデーションスキーマの定義
 const formSchema = z.object({
   birthYear: z.string().min(1, '生年月日を選択してください'),
   rent: z.string().min(1, '家賃を選択してください'),
@@ -27,24 +20,21 @@ type QuestionProps = {
   children: React.ReactNode;
 };
 
-const Question = ({ number, question, children }: QuestionProps): JSX.Element => {
-  return (
-    <>
-      <div className="flex w-full flex-col items-center">
-        <div className="mb-3 size-[88px]">
-          <div className="relative flex h-full w-full items-center justify-center rounded-full border-[3px] border-solid border-[#ffdc00]">
-            <div className="text-center text-[32px] leading-8 text-black">Q{number}</div>
-          </div>
+const Question = ({ number, question, children }: QuestionProps): JSX.Element => (
+  <>
+    <div className="flex w-full flex-col items-center">
+      <div className="mb-3 size-[88px]">
+        <div className="relative flex h-full w-full items-center justify-center rounded-full border-[3px] border-solid border-[#ffdc00]">
+          <div className="text-center text-[32px] leading-8 text-black">Q{number}</div>
         </div>
-        <div className="tracking-normal mb-6 text-center text-lg leading-[18px]">{question}</div>
-        {children}
       </div>
-      {number !== 3 && <Separator />}
-    </>
-  );
-};
+      <div className="mb-6 text-center text-lg leading-[18px] tracking-normal">{question}</div>
+      {children}
+    </div>
+    {number !== 3 && <Separator />}
+  </>
+);
 
-// 現在の年から年の選択肢を生成（30年分）
 const generateYearOptions = (): { value: string; label: string }[] => {
   const currentYear = new Date().getFullYear();
   const startYear = currentYear - 60; // 60歳までカバー
@@ -83,31 +73,29 @@ export const QuestionSection = (): JSX.Element => {
     }
   };
 
-  // フォームのバリデーションを実行
   const validateForm = (): boolean => {
     const result = formSchema.safeParse({ birthYear, rent, income });
 
     if (result.success) {
       setErrors({});
       return true;
-    } else {
-      const formattedErrors: {
-        birthYear?: string;
-        rent?: string;
-        income?: string;
-      } = {};
-
-      result.error.errors.forEach((error) => {
-        const path = error.path[0] as keyof FormData;
-        formattedErrors[path] = error.message;
-      });
-
-      setErrors(formattedErrors);
-      return false;
     }
+
+    const formattedErrors: {
+      birthYear?: string;
+      rent?: string;
+      income?: string;
+    } = {};
+
+    result.error.errors.forEach((error) => {
+      const path = error.path[0] as keyof FormData;
+      formattedErrors[path] = error.message;
+    });
+
+    setErrors(formattedErrors);
+    return false;
   };
 
-  // 送信処理
   const handleSubmit = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
     e.preventDefault();
     setWasValidated(true);
@@ -115,24 +103,22 @@ export const QuestionSection = (): JSX.Element => {
     const isValid = validateForm();
 
     if (isValid) {
-      // バリデーション成功時はリダイレクト
       window.location.href = resultUrl;
     }
   };
 
-  // URLパラメータを構築
   const resultUrl = `/results?birthYear=${encodeURIComponent(birthYear)}&rent=${encodeURIComponent(rentNumber)}万円&income=${encodeURIComponent(income)}`;
 
   return (
     <>
       <section id="question" className="flex w-full flex-col items-center gap-y-10 px-[58px] pt-10">
-        <Question number={1} question="あなたの生年月日は？">
+        <Question number={1} question="生まれ年を選んでください">
           <div className="w-full">
             <Select onValueChange={(value) => setBirthYear(value)}>
               <SelectTrigger className="h-12 w-full rounded-lg border border-solid border-[#999999] bg-white px-3.5 py-3.5 text-lg data-[placeholder]:text-[#999999]">
                 <SelectValue
                   placeholder="生年月日を選んでください"
-                  className="tracking-normal text-lg leading-[18px]"
+                  className="text-lg leading-[18px] tracking-normal"
                 />
               </SelectTrigger>
               <SelectContent className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 max-h-[240px] overflow-y-auto">
@@ -175,7 +161,7 @@ export const QuestionSection = (): JSX.Element => {
               <SelectTrigger className="h-12 w-full rounded-lg border border-solid border-[#999999] bg-white px-3.5 py-3.5 text-lg data-[placeholder]:text-[#999999]">
                 <SelectValue
                   placeholder="年収を選んでください"
-                  className="tracking-normal text-lg leading-[18px]"
+                  className="text-lg leading-[18px] tracking-normal"
                 />
               </SelectTrigger>
               <SelectContent className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 overflow-y-auto">
@@ -200,7 +186,7 @@ export const QuestionSection = (): JSX.Element => {
         </div>
       </section>
       <div className="w-full space-y-4 text-center">
-        <p className="tracking-normal text-center text-[32px] font-bold leading-[44.8px] text-text">
+        <p className="text-text text-center text-[32px] font-bold leading-[44.8px] tracking-normal">
           専門家に
           <br />
           <UnderlinedText>無料相談</UnderlinedText>ができます

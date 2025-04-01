@@ -1,4 +1,4 @@
-import { InterviewPage } from '~/screens/pages/Interview';
+import { InterviewPage } from '~/components/pages/Interview';
 import type { MetaFunction } from '@remix-run/node';
 
 export const meta: MetaFunction = () => {

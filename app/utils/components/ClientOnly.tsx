@@ -5,10 +5,6 @@ interface ClientOnlyProps {
   fallback?: ReactNode;
 }
 
-/**
- * クライアントサイドでのみレンダリングするコンポーネント
- * SSRでは fallback をレンダリングし、hydration後にchildrenを実行してレンダリングします
- */
 export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -21,4 +17,4 @@ export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
   }
 
   return <>{children()}</>;
-} 
+}

@@ -1,18 +1,17 @@
-import { Badge } from '../../../components/ui/badge';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
-import { Textarea } from '../../../components/ui/textarea';
-import { formFields, formSchema } from '../../../constants';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { lazy, useRef, useState, Suspense, useEffect } from 'react';
+import { useFetcher } from '@remix-run/react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { CTAButton } from '../../../components/features/CTAButton';
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { useFetcher } from '@remix-run/react';
-import { getUserData } from '../../../utils/storage';
-import { ClientOnly } from '~/components/ClientOnly';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Badge } from '../ui/badge';
+import { formFields, formSchema } from '../../constants';
+import { CTAButton } from '../features/CTAButton';
+import { getUserData } from '../../utils/storage';
+import { ClientOnly } from '../../utils/components/ClientOnly';
 
-// 遅延読み込み用のimportに変更
 const ReactGoogleRecaptcha = lazy(() => import('react-google-recaptcha'));
 
 type FormValues = z.infer<typeof formSchema>;
@@ -23,14 +22,12 @@ type FormField = {
   required: boolean;
 };
 
-// fetcherのレスポンスの型定義
 type FetcherResponse = {
   success?: boolean;
   message?: string;
   errors?: Record<string, string>;
 };
 
-// クライアント側のグローバル環境変数の型定義
 declare global {
   interface Window {
     ENV: {
@@ -45,7 +42,6 @@ declare global {
   }
 }
 
-// reCAPTCHAコンポーネント（遅延読み込み）
 const RecaptchaComponent = ({
   onChange,
   siteKey,
@@ -56,15 +52,12 @@ const RecaptchaComponent = ({
   const [isRecaptchaLoaded, setIsRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef<any>(null);
 
-  // reCAPTCHAが読み込まれているか確認
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const checkRecaptchaLoaded = () => {
-        // windowオブジェクトのgrecaptchaプロパティをオプショナルチェーンで確認
         if (window?.grecaptcha?.render) {
           setIsRecaptchaLoaded(true);
         } else {
-          // 100ms後に再試行
           setTimeout(checkRecaptchaLoaded, 100);
         }
       };
@@ -81,7 +74,6 @@ const RecaptchaComponent = ({
     );
   }
 
-  // Suspenseを使用してreCAPTCHAコンポーネントを表示
   return (
     <Suspense
       fallback={
@@ -90,17 +82,12 @@ const RecaptchaComponent = ({
         </div>
       }
     >
-      <ReactGoogleRecaptcha
-        ref={recaptchaRef}
-        sitekey={siteKey}
-        onChange={onChange}
-        hl="ja"
-      />
+      <ReactGoogleRecaptcha ref={recaptchaRef} sitekey={siteKey} onChange={onChange} hl="ja" />
     </Suspense>
   );
 };
 
-export const FormSection = (): JSX.Element => {
+const FormContent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -117,10 +104,8 @@ export const FormSection = (): JSX.Element => {
     resolver: zodResolver(formSchema),
   });
 
-  // クライアントサイドでのみ実行されるように条件分岐を追加
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // fetcher の状態を監視して UI を更新
       if (fetcher.state === 'submitting') {
         setIsSubmitting(true);
       } else if (fetcher.state === 'idle' && fetcher.data) {
@@ -147,59 +132,48 @@ export const FormSection = (): JSX.Element => {
       setIsSubmitting(true);
       setSubmitError(null);
 
-      // URLパラメータから追加情報を取得
       const searchParams = new URLSearchParams(window.location.search);
       const ageParam = searchParams.get('age');
       const birthYearParam = searchParams.get('birthYear');
       const rentParam = searchParams.get('rent');
       const incomeParam = searchParams.get('income');
 
-      // ローカルストレージから保存されたユーザーデータを取得
       const userData = getUserData();
 
-      // 追加情報をフォームデータに追加
       const formData = new FormData();
 
-      // 基本フォームデータ
       Object.entries(data).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           formData.append(key, value as string);
         }
       });
 
-      // データ優先順位: URLパラメータ > ローカルストレージ
-      // 年齢情報
       if (ageParam) {
         formData.append('age', ageParam);
       } else if (userData.age) {
         formData.append('age', userData.age);
       }
 
-      // 生年情報
       if (birthYearParam) {
         formData.append('birthYear', birthYearParam);
       } else if (userData.birthYear) {
         formData.append('birthYear', userData.birthYear);
       }
 
-      // 家賃情報
       if (rentParam) {
         formData.append('rent', rentParam);
       } else if (userData.rent) {
         formData.append('rent', userData.rent);
       }
 
-      // 年収情報
       if (incomeParam) {
         formData.append('annualIncome', incomeParam);
       } else if (userData.income) {
         formData.append('annualIncome', userData.income);
       }
 
-      // reCAPTCHAトークンをフォームデータに追加
       formData.append('recaptchaToken', recaptchaToken);
 
-      // fetcher を使用してフォームデータを送信
       fetcher.submit(formData, { method: 'post', action: '/api/contact' });
     } catch (error) {
       console.error('Error:', error);
@@ -208,7 +182,6 @@ export const FormSection = (): JSX.Element => {
     }
   };
 
-  // reCAPTCHAの変更ハンドラー
   const handleRecaptchaChange = (token: string | null) => {
     if (token) {
       setRecaptchaToken(token);
@@ -244,9 +217,7 @@ export const FormSection = (): JSX.Element => {
                   <Badge
                     className={`${field.required ? 'bg-primary' : 'bg-[#eeeeee]'} rounded-[2px] px-2 py-0 shadow-none`}
                   >
-                    <span
-                      className={`w-fit text-center text-xs leading-[18.6px] tracking-[1.20px]`}
-                    >
+                    <span className="w-fit text-center text-xs leading-[18.6px] tracking-[1.20px]">
                       {field.required ? '必須' : '任意'}
                     </span>
                   </Badge>
@@ -302,11 +273,13 @@ export const FormSection = (): JSX.Element => {
                 }
               >
                 {() => {
-                  // window.ENVからreCAPTCHAのサイトキーを取得
-                  const siteKey =
-                    typeof window !== 'undefined' && window.ENV
-                      ? window.ENV.RECAPTCHA_SITE_KEY
-                      : '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // フォールバック
+                  let siteKey = '';
+
+                  if (typeof window !== 'undefined' && window.ENV) {
+                    siteKey = window.ENV.RECAPTCHA_SITE_KEY;
+                  } else {
+                    siteKey = '6LcR_TAoAAAAAJjM3b_QGYkLXYPzkzODh8gmT8Tx';
+                  }
 
                   return <RecaptchaComponent onChange={handleRecaptchaChange} siteKey={siteKey} />;
                 }}
@@ -351,4 +324,8 @@ export const FormSection = (): JSX.Element => {
       </div>
     </div>
   );
+};
+
+export const FormSection = (): JSX.Element => {
+  return <ClientOnly fallback={<div>Loading...</div>}>{() => <FormContent />}</ClientOnly>;
 };

@@ -13,7 +13,10 @@ export async function verifyRecaptcha(token: string): Promise<boolean> {
     const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
     
     // テスト用トークンの場合は常に成功とする（開発環境のみ）
-    if (isDevelopment && token === '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') {
+    if (isDevelopment && (
+      token === '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' || 
+      token === '6LcR_TAoAAAAAJjM3b_QGYkLXYPzkzODh8gmT8Tx'
+    )) {
       console.log('開発環境: reCAPTCHA検証をスキップします');
       return true;
     }

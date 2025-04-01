@@ -1,80 +1,68 @@
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { UnderlinedText } from '../../components/ui/underline-text';
-import { YellowCard } from '../../components/ui/yellow-card/YellowCard';
-import { FormSection } from '../MainScreen/sections/FormSection';
+import { useState, useEffect } from 'react';
+import { Card, CardHeader, CardContent } from '../ui/card';
+import { UnderlinedText } from '../ui/underline-text';
+import { YellowCard } from '../ui/yellow-card/YellowCard';
 import { RENT_OPTIONS } from '../../constants';
 import { calculateTotalLoanAmount, calculateTotalRentAmount } from '../../utils/loan-calculator';
-import { saveUserData, getUserData, UserData } from '../../utils/storage';
+import { UserData, getUserData, saveUserData } from '../../utils/storage';
+import { FormSection } from '../sections/FormSection';
 
 // 生年月日から年齢を計算する関数
 const calculateAge = (birthYear: string): string => {
   const currentYear = new Date().getFullYear();
   const birthYearNumber = parseInt(birthYear, 10);
 
-  if (isNaN(birthYearNumber)) return 'XX歳';
+  if (Number.isNaN(birthYearNumber)) return 'XX歳';
 
   const age = currentYear - birthYearNumber;
   return `${age}歳`;
 };
 
-// 生年月日から年齢（数値）を計算する関数
 const calculateAgeNumber = (birthYear: string): number => {
   const currentYear = new Date().getFullYear();
   const birthYearNumber = parseInt(birthYear, 10);
 
-  if (isNaN(birthYearNumber)) return 30; // デフォルト値
+  if (Number.isNaN(birthYearNumber)) return 30;
 
   return currentYear - birthYearNumber;
 };
 
-// 住宅ローンの総支払額をフォーマットする関数
 const formatLoanAmount = (monthlyPayment: number): string => {
-  if (isNaN(monthlyPayment) || monthlyPayment <= 0) {
+  if (Number.isNaN(monthlyPayment) || monthlyPayment <= 0) {
     return 'XX,XXXX';
   }
 
-  // 共通ユーティリティを使用して計算
   const totalAmount = calculateTotalLoanAmount(monthlyPayment);
 
-  // 千単位でカンマ区切りにフォーマット（小数点第1位まで表示）
   return totalAmount.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-// 賃貸総支払額をフォーマットする関数
 const formatRentAmount = (monthlyRent: string, currentAge: number): string => {
   const rentNum = parseInt(monthlyRent, 10);
-  if (isNaN(rentNum) || isNaN(currentAge)) return 'X,XXX';
+  if (Number.isNaN(rentNum) || Number.isNaN(currentAge)) return 'X,XXX';
 
-  // 共通ユーティリティを使用して計算
   const totalRent = calculateTotalRentAmount(rentNum, currentAge);
 
-  // 千単位でカンマ区切り
   return totalRent.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 export const ResultsPage = (): JSX.Element => {
-  // 表示用の状態変数
   const [age, setAge] = useState('XX歳');
   const [rent, setRent] = useState('X万円');
   const [rentNumber, setRentNumber] = useState('XX');
 
-  // 家賃に基づく計算結果（将来的に拡張可能）
   const [yearsToPay, setYearsToPay] = useState('XX');
   const [totalAmount, setTotalAmount] = useState('XX,XXXX');
   const [totalRentAmount, setTotalRentAmount] = useState('X,XXX');
 
   useEffect(() => {
-    // まずローカルストレージから保存されているデータを取得
     const savedData = getUserData();
 
-    // URLパラメータから値を取得（URL優先）
     const searchParams = new URLSearchParams(window.location.search);
     const birthYearParam = searchParams.get('birthYear') || savedData.birthYear;
     const rentParam = searchParams.get('rent') || savedData.rent;
     const incomeParam = searchParams.get('income') || savedData.income;
 
-    // ユーザーデータを準備
     const userData: UserData = {};
 
     if (birthYearParam) {
@@ -88,26 +76,20 @@ export const ResultsPage = (): JSX.Element => {
       userData.rent = rentParam;
       setRent(rentParam);
 
-      // 数値部分を抽出してrentNumberにセット
       const match = rentParam.match(/^(\d+)/);
       if (match && match[1]) {
         const extractedNumber = match[1];
         setRentNumber(extractedNumber);
 
-        // 抽出した数値に対応するRENT_OPTIONの要素を見つける
         const option = RENT_OPTIONS.find((opt) => opt.numberValue === extractedNumber);
         if (option) {
-          // 家賃に基づく計算
           const rentNum = parseInt(option.numberValue, 10);
-          setYearsToPay('35'); // 35年ローンを想定
+          setYearsToPay('35');
 
-          // 住宅ローンの総支払額を計算
           setTotalAmount(formatLoanAmount(rentNum));
 
-          // 生年月日から現在の年齢を計算
           const currentAge = birthYearParam ? calculateAgeNumber(birthYearParam) : 30;
 
-          // 賃貸の総支払額を計算
           setTotalRentAmount(formatRentAmount(extractedNumber, currentAge));
         }
       }
@@ -117,7 +99,6 @@ export const ResultsPage = (): JSX.Element => {
       userData.income = incomeParam;
     }
 
-    // 更新されたデータをローカルストレージに保存
     saveUserData(userData);
   }, []);
 

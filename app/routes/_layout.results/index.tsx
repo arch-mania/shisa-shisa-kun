@@ -1,4 +1,4 @@
-import { ResultsPage } from '~/screens/pages/Results';
+import { ResultsPage } from '~/components/pages/Results';
 import type { MetaFunction } from '@remix-run/node';
 
 export const meta: MetaFunction = () => {

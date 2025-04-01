@@ -1,4 +1,5 @@
 import { CTAButton } from './CTAButton';
+import { QuestionLink } from './QuestionLink';
 
 export const CoverImage = (): JSX.Element => {
   return (
@@ -11,9 +12,9 @@ export const CoverImage = (): JSX.Element => {
         className="hidden w-[576px] pr-4 md:block"
       />
       <div className="mt-10 hidden flex-col items-center gap-y-4 px-4 md:flex">
-        <a href="/#question" className="transition-opacity duration-200 hover:opacity-80">
+        <QuestionLink>
           <img src="/cta.png" alt="CTA" className="w-[487px]" width="487" height="261" />
-        </a>
+        </QuestionLink>
         <CTAButton text="まずは診断する" />
       </div>
     </div>
