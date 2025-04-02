@@ -34,10 +34,10 @@ const calculateBirthYear = (age: number): number => {
 export async function saveContactForm(formData: ContactFormData) {
   try {
     // 環境変数からメール設定を取得
-    const emailHost = process.env.EMAIL_HOST || 'smtp.example.com';
-    const emailPort = parseInt(process.env.EMAIL_PORT || '587', 10);
-    const emailUser = process.env.EMAIL_USER || 'user@example.com';
-    const emailPass = process.env.EMAIL_PASS || 'password';
+    const emailHost = process.env.SMTP_HOST || 'smtp.example.com';
+    const emailPort = parseInt(process.env.SMTP_PORT || '587', 10);
+    const emailUser = process.env.SMTP_USER || 'user@example.com';
+    const emailPass = process.env.SMTP_PASS || 'password';
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
 
     // 開発環境かどうかを確認（NODE_ENVが設定されていない場合は開発環境とみなす）
