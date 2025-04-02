@@ -99,7 +99,7 @@ ${formData.message || '特になし'}
       // 管理者向けメールに診断結果を追加
       adminMailText += `
 ━━━ お客様の基本情報 ━━━━━━━━━━━━━━━━━
-【生年月日】${birthYear}年生まれ
+【生まれ年】${birthYear}年生まれ
 【年齢】${age}歳
 【毎月の家賃】${rent}万円台
 【現在の年収】${annualIncome}万円
@@ -116,7 +116,7 @@ ${formData.message || '特になし'}
       // 顧客向けメールに診断結果を追加
       customerMailText += `
 ━━━ 資産の診断結果 ━━━━━━━━━━━━━━━━━━
-【生年月日】${birthYear}年生まれ
+【生まれ年】${birthYear}年生まれ
 【毎月の家賃】${rent}万円台
 【現在の年収】${annualIncome}万円
 【診断結果】
