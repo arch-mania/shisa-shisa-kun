@@ -50,7 +50,7 @@ export const ProblemSection = (): JSX.Element => (
         </Card>
       </div>
 
-      <div className="space-y-4 text-center">
+      <div className="flex flex-col gap-y-4 text-center">
         <p className="text-lg font-bold leading-[160%] tracking-normal">
           決める前に、知ってほしい。
           <br />

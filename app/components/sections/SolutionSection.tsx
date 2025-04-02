@@ -97,7 +97,7 @@ export const SolutionSection = (): JSX.Element => (
           height={159}
         />
       </div>
-      <div className="space-y-4">
+      <div className="flex flex-col gap-y-4">
         <p className="text-center text-lg font-bold leading-[160%] tracking-widest">
           資産を総合的に判断して、
           <br />
