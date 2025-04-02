@@ -162,7 +162,7 @@ MAIL：info@ltlx.jp
 
     const customerMailHtml = customerMailText;
 
-    if (!isDevelopment) {
+    if (isDevelopment) {
       // 開発環境では実際のメール送信をスキップし、コンソールにログを出力
       console.log('\n===== 開発モード: メール送信がシミュレートされました =====');
       console.log('\n【管理者向けメール】');
