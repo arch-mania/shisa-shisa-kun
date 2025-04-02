@@ -1,6 +1,6 @@
 import { json, ActionFunction } from '@remix-run/node';
 import { saveContactForm } from '~/services/contact.server';
-import { verifyRecaptcha } from '~/services/recaptcha.server';
+import { verifyRecaptcha } from '~/utils/recaptcha';
 
 /**
  * お問い合わせフォームの送信を処理するAPIエンドポイント

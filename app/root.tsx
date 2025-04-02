@@ -1,9 +1,17 @@
-import { Meta, Links, Outlet, Scripts, useLoaderData, ScrollRestoration } from '@remix-run/react';
+import {
+  json,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+} from '@remix-run/react';
 import type { LinksFunction, LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { useEffect } from 'react';
 
 import tailwind from '~/tailwind.css?url';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { useEffect } from 'react';
 
 type LoaderData = {
   ENV: {
@@ -14,10 +22,19 @@ type LoaderData = {
 export const loader: LoaderFunction = () =>
   json({
     ENV: {
-      RECAPTCHA_SITE_KEY:
-        process.env.RECAPTCHA_SITE_KEY || '6LcR_TAoAAAAAJjM3b_QGYkLXYPzkzODh8gmT8Tx',
+      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY || '',
     },
   });
+
+function loadRecaptchaScript() {
+  if (typeof window !== 'undefined' && !document.querySelector('script[src*="recaptcha"]')) {
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }
+}
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tailwind },
@@ -32,16 +49,6 @@ export const links: LinksFunction = () => [
     href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Lato:wght@400;700&display=swap',
   },
 ];
-
-function loadRecaptchaScript() {
-  if (typeof window !== 'undefined' && !document.querySelector('script[src*="recaptcha"]')) {
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js?hl=ja';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-  }
-}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -62,20 +69,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const data = useLoaderData<LoaderData>();
+  const { ENV } = useLoaderData<LoaderData>();
 
   useEffect(() => {
     loadRecaptchaScript();
   }, []);
 
   return (
-    <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
-        }}
-      />
+    <GoogleReCaptchaProvider
+      reCaptchaKey={ENV.RECAPTCHA_SITE_KEY}
+      scriptProps={{
+        async: false,
+        defer: true,
+        appendTo: 'head',
+        nonce: undefined,
+      }}
+    >
       <Outlet />
-    </>
+    </GoogleReCaptchaProvider>
   );
 }

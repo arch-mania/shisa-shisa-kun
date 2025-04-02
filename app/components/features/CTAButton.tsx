@@ -9,6 +9,7 @@ interface CTAButtonProps {
   badgeText?: string;
   onSubmit?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export const CTAButton: React.FC<CTAButtonProps> = ({
@@ -17,9 +18,11 @@ export const CTAButton: React.FC<CTAButtonProps> = ({
   href = '/#question',
   onSubmit,
   disabled = false,
+  type = 'button',
 }) => {
   const button = (
     <Button
+      type={type}
       className="h-[46px] w-full max-w-[322px] rounded-xl bg-[#ffdc00] shadow-[inset_0px_-2px_0px_#00000040] hover:bg-[#ffdc00]/80"
       disabled={disabled}
     >
@@ -33,6 +36,10 @@ export const CTAButton: React.FC<CTAButtonProps> = ({
   );
 
   if (disabled) {
+    return <div className="flex w-full justify-center">{button}</div>;
+  }
+
+  if (type === 'submit') {
     return <div className="flex w-full justify-center">{button}</div>;
   }
 

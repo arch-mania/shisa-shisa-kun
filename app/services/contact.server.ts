@@ -204,9 +204,6 @@ MAIL：info@ltlx.jp
       });
     }
 
-    // データをログに記録（本番環境では実際のデータベースに保存するなど）
-    console.log('フォーム送信データ:', formData);
-
     return { success: true };
   } catch (error) {
     console.error('Error sending contact form emails:', error);

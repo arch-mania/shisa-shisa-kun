@@ -1,4 +1,4 @@
-import { lazy, useRef, useState, Suspense, useEffect } from 'react';
+import { lazy, useRef, useState, Suspense, useEffect, useCallback } from 'react';
 import { useFetcher } from '@remix-run/react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -11,6 +11,7 @@ import { formFields, formSchema } from '../../constants';
 import { CTAButton } from '../features/CTAButton';
 import { getUserData } from '../../utils/storage';
 import { ClientOnly } from '../../utils/components/ClientOnly';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const ReactGoogleRecaptcha = lazy(() => import('react-google-recaptcha'));
 
@@ -93,6 +94,7 @@ const FormContent = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const fetcher = useFetcher<FetcherResponse>();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const {
     register,
@@ -103,6 +105,20 @@ const FormContent = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+
+  const handleReCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      return;
+    }
+
+    const token = await executeRecaptcha('contact_form');
+    setRecaptchaToken(token);
+    setValue('recaptchaToken', token);
+  }, [executeRecaptcha, setValue]);
+
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -142,6 +158,8 @@ const FormContent = () => {
 
       const formData = new FormData();
 
+      formData.append('recaptchaToken', recaptchaToken);
+
       Object.entries(data).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           formData.append(key, value as string);
@@ -172,23 +190,11 @@ const FormContent = () => {
         formData.append('annualIncome', userData.income);
       }
 
-      formData.append('recaptchaToken', recaptchaToken);
-
       fetcher.submit(formData, { method: 'post', action: '/api/contact' });
     } catch (error) {
       console.error('Error:', error);
       setSubmitError(error instanceof Error ? error.message : 'お問い合わせの送信に失敗しました');
       setIsSubmitting(false);
-    }
-  };
-
-  const handleRecaptchaChange = (token: string | null) => {
-    if (token) {
-      setRecaptchaToken(token);
-      setValue('recaptchaToken', token);
-    } else {
-      setRecaptchaToken(null);
-      setValue('recaptchaToken', '');
     }
   };
 
@@ -205,6 +211,7 @@ const FormContent = () => {
           </div>
         ) : (
           <fetcher.Form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+            {recaptchaToken && <input type="hidden" name="recaptchaToken" value={recaptchaToken} />}
             {formFields.map((field: FormField) => (
               <div key={field.id} className="flex w-full flex-col items-start gap-1">
                 <div className="flex w-full items-center justify-between px-2 py-0">
@@ -264,31 +271,6 @@ const FormContent = () => {
               )}
             </div>
 
-            <div className="flex w-full flex-col items-center gap-4">
-              <ClientOnly
-                fallback={
-                  <div className="flex h-[78px] w-full items-center justify-center bg-gray-100">
-                    reCAPTCHA読み込み中...
-                  </div>
-                }
-              >
-                {() => {
-                  let siteKey = '';
-
-                  if (typeof window !== 'undefined' && window.ENV) {
-                    siteKey = window.ENV.RECAPTCHA_SITE_KEY;
-                  } else {
-                    siteKey = '6LcR_TAoAAAAAJjM3b_QGYkLXYPzkzODh8gmT8Tx';
-                  }
-
-                  return <RecaptchaComponent onChange={handleRecaptchaChange} siteKey={siteKey} />;
-                }}
-              </ClientOnly>
-              {errors.recaptchaToken && (
-                <p className="mt-1 text-sm text-red-500">{errors.recaptchaToken.message}</p>
-              )}
-            </div>
-
             <div className="flex w-full flex-col items-center gap-3">
               <a
                 href="https://mr-mr.jp/privacy/"
@@ -301,7 +283,7 @@ const FormContent = () => {
               <CTAButton
                 text={isSubmitting ? '送信中...' : '上記に同意して申し込む'}
                 badgeText="無料"
-                onSubmit={handleSubmit(onSubmit)}
+                type="submit"
                 disabled={isSubmitting || !recaptchaToken}
               />
             </div>
