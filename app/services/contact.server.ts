@@ -105,7 +105,6 @@ ${formData.message || '特になし'}
 【毎月の家賃】${rent}万円台
 【現在の年収】${annualIncome}万円
 【診断結果】
-
 月々【${rent}万円】を合計【${years}年】支払うとした場合、
 おおよその資産【${estimatedAssetValue}万円】の住宅に住める試算です。
 
