@@ -1,7 +1,7 @@
 import { CTAButton } from '../features/CTAButton';
 
 export const FirstViewSection = (): JSX.Element => (
-  <section id="first-view" className="flex flex-col items-center gap-y-6 px-4 pb-10">
+  <section id="first-view" className="flex flex-col items-center gap-y-6 px-4 pb-[52px]">
     <p className="text-center text-sm leading-[160%] tracking-widest">
       ご存知ですか？
       <br />

@@ -181,11 +181,11 @@ export const QuestionSection = (): JSX.Element => {
           </div>
         </Question>
 
-        <div className="my-8 flex justify-center px-4">
+        <div className="flex justify-center px-4">
           <CTAButton href="#" text="回答を送信して結果を見る" onSubmit={handleSubmit} />
         </div>
       </section>
-      <div className="w-full space-y-4 text-center">
+      <div className="w-full space-y-4 pt-12 text-center">
         <p className="text-text text-center text-[32px] font-bold leading-[44.8px] tracking-normal">
           専門家に
           <br />

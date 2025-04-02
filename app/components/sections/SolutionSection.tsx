@@ -5,7 +5,7 @@ import { QuestionLink } from '../features/QuestionLink';
 
 export const SolutionSection = (): JSX.Element => (
   <section id="solution">
-    <div className="flex flex-col items-center gap-y-2 px-4 py-12 pb-10">
+    <div className="flex flex-col items-center gap-y-2 px-4 pt-12">
       <p className="text-center text-sm leading-[160%] tracking-widest">
         日本人の住まいを比較すると…
       </p>
@@ -108,7 +108,7 @@ export const SolutionSection = (): JSX.Element => (
       <div className="absolute -top-10 left-1/2 aspect-square w-[90%] -translate-x-1/2 rounded-full bg-white" />
     </div>
     <div className="flex flex-col items-center gap-y-2 px-4 py-12 pb-10">
-      <div className="relative mt-[120px] w-full text-center">
+      <div className="relative w-full text-center">
         <p className="text-text text-center text-[32px] font-bold leading-[44.8px] tracking-normal">
           毎月の家賃が
           <br />

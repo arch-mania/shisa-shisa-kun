@@ -199,7 +199,7 @@ const FormContent = () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-6 px-8">
+    <div className="flex w-full flex-col items-center gap-6 px-8 pb-16">
       <div className="w-full space-y-10">
         {submitSuccess ? (
           <div className="rounded-lg bg-green-50 p-4 text-center">

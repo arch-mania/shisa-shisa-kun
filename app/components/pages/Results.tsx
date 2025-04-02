@@ -103,7 +103,7 @@ export const ResultsPage = (): JSX.Element => {
   }, []);
 
   return (
-    <div className="px-4 pb-16 pt-4">
+    <div className="px-4 pt-4">
       <a href="/" className="flex items-center gap-2 hover:opacity-80">
         <img src="/arrow-left.svg" alt="" width={24} height={24} className="size-6" />
         <p className="text-sm leading-[100%] tracking-normal">前の画面に戻る</p>
