@@ -34,7 +34,7 @@ const formatLoanAmount = (monthlyPayment: number): string => {
 
   const totalAmount = calculateTotalLoanAmount(monthlyPayment);
 
-  return totalAmount.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return totalAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 const formatRentAmount = (monthlyRent: string, currentAge: number): string => {
@@ -174,7 +174,7 @@ export const ResultsPage = (): JSX.Element => {
           </Card>
           <span className="mt-4 inline-block text-[10px] leading-[160%] tracking-normal">
             ※ 翌年に35年ローンを組んだ場合のシミュレーション。
-            <br />※ 敷金・礼金などのXXXXXXXXXXは含まれません。
+            <br />※ 敷金・礼金などは含まれません。
           </span>
         </div>
         <img className="h-4 w-3.5" alt="" src="/bottom-arrow.png" />
@@ -235,7 +235,7 @@ export const ResultsPage = (): JSX.Element => {
             <span className="text-center text-sm leading-[160%] tracking-normal">
               住宅ローン完済まで
               <br />
-              毎月約X.X万円支払い
+              毎月約{rent}万円支払い
             </span>
             <div>
               <Card className="mb-2 w-40 rounded-2xl border-2 border-solid border-primary">
