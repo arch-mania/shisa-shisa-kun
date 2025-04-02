@@ -203,7 +203,7 @@ const FormContent = () => {
       <div className="w-full space-y-10">
         {submitSuccess ? (
           <div className="rounded-lg bg-green-50 p-4 text-center">
-            <p className="p-4 text-sm font-medium text-green-700">
+            <p className="p-3 text-sm font-medium text-green-700">
               お問い合わせありがとうございました。
               <br />
               ご担当者よりご連絡しますので
