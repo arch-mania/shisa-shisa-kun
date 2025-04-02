@@ -110,7 +110,7 @@ ${formData.message || '特になし'}
 おおよその資産【${estimatedAssetValue}万円】の住宅に住める試算です。
 
 仮に、現在の賃貸に、平均寿命90歳まで住み続けた場合、
-毎月【${rent}万円】の家賃を支払続けると支払総額【約${lifeRentTotal}万円】です。
+毎月【${rent}万円】の家賃を支払続けると支払総額は【約${lifeRentTotal}万円】です。
 
 ※上記はあくまで簡易資産による概算値となります。あらかじめご了承ください。
 `;
@@ -146,7 +146,7 @@ ${formData.message || '特になし'}
 
 その他、ご不明点、追加のご質問等がございましたら、
 
-[こちらのフォーム](https://ltlx.jp/contact/)よりお気軽にお問い合わせください。
+<a href="https://ltlx.jp/contact/">こちらのフォーム</a>よりお気軽にお問い合わせください。
 
 ———————————————————————
 
@@ -156,11 +156,13 @@ LIVE THE LIFE株式会社
 
 MAIL：info@ltlx.jp
 
-公式HP：[https://ltlx.jp](https://ltlx.jp/)
+公式HP：<a href="https://ltlx.jp">https://ltlx.jp</a>
 
 ———————————————————————`;
 
-    if (isDevelopment) {
+    const customerMailHtml = customerMailText;
+
+    if (!isDevelopment) {
       // 開発環境では実際のメール送信をスキップし、コンソールにログを出力
       console.log('\n===== 開発モード: メール送信がシミュレートされました =====');
       console.log('\n【管理者向けメール】');
@@ -201,6 +203,7 @@ MAIL：info@ltlx.jp
         to: formData.email,
         subject: '【資産を試算「シサシサくん」】お問い合わせを承りました',
         text: customerMailText,
+        html: customerMailHtml,
       });
     }
 
