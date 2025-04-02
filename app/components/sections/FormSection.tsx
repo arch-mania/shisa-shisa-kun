@@ -202,8 +202,8 @@ const FormContent = () => {
     <div className="flex w-full flex-col items-center gap-6 px-8">
       <div className="w-full space-y-10">
         {submitSuccess ? (
-          <div className="rounded-lg bg-green-50 text-center">
-            <p className="text-base font-medium text-green-700">
+          <div className="rounded-lg bg-green-50 p-4 text-center">
+            <p className="p-4 text-sm font-medium text-green-700">
               お問い合わせありがとうございました。
               <br />
               ご担当者よりご連絡しますので
