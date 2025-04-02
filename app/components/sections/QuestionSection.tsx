@@ -112,12 +112,12 @@ export const QuestionSection = (): JSX.Element => {
   return (
     <>
       <section id="question" className="flex w-full flex-col items-center gap-y-10 px-[58px] pt-10">
-        <Question number={1} question="生まれ年を選んでください">
+        <Question number={1} question="あなたの生まれ年は？">
           <div className="w-full">
             <Select onValueChange={(value) => setBirthYear(value)}>
               <SelectTrigger className="h-12 w-full rounded-lg border border-solid border-[#999999] bg-white px-3.5 py-3.5 text-lg data-[placeholder]:text-[#999999]">
                 <SelectValue
-                  placeholder="生年月日を選んでください"
+                  placeholder="生まれ年を選んでください"
                   className="text-lg leading-[18px] tracking-normal"
                 />
               </SelectTrigger>
