@@ -159,7 +159,7 @@ MAIL：info@ltlx.jp
 
 ———————————————————————`;
 
-    const customerMailHtml = customerMailText;
+    const customerMailHtml = customerMailText.replace(/\n/g, '<br>');
 
     if (isDevelopment) {
       // 開発環境では実際のメール送信をスキップし、コンソールにログを出力
