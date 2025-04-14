@@ -36,6 +36,28 @@ function loadRecaptchaScript() {
   }
 }
 
+// Google Tag Managerをクライアントサイドで読み込む関数
+function loadGTM() {
+  if (typeof window !== 'undefined') {
+    // dataLayerの初期化
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    
+    // GTMスクリプトタグの作成
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtm.js?id=GTM-THCHCPS5`;
+    
+    // ドキュメントに追加
+    const firstScript = document.getElementsByTagName('script')[0];
+    if (firstScript && firstScript.parentNode) {
+      firstScript.parentNode.insertBefore(script, firstScript);
+    } else {
+      document.head.appendChild(script);
+    }
+  }
+}
+
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tailwind },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -50,28 +72,27 @@ export const links: LinksFunction = () => [
   },
 ];
 
+// 型定義を追加
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    loadGTM();
+  }, []);
+
   return (
     <html lang="ja">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-THCHCPS5');`,
-          }}
-        />
-        {/* End Google Tag Manager */}
         <Meta />
         <Links />
       </head>
       <body className="bg-secondary">
-        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-THCHCPS5"
@@ -80,7 +101,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: 'none', visibility: 'hidden' }}
           ></iframe>
         </noscript>
-        {/* End Google Tag Manager (noscript) */}
         {children}
         <ScrollRestoration />
         <Scripts />
