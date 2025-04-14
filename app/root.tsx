@@ -42,12 +42,12 @@ function loadGTM() {
     // dataLayerの初期化
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    
+
     // GTMスクリプトタグの作成
     const script = document.createElement('script');
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtm.js?id=GTM-THCHCPS5`;
-    
+
     // ドキュメントに追加
     const firstScript = document.getElementsByTagName('script')[0];
     if (firstScript && firstScript.parentNode) {
@@ -55,6 +55,25 @@ function loadGTM() {
     } else {
       document.head.appendChild(script);
     }
+  }
+}
+
+// Google広告タグをクライアントサイドで読み込む関数
+function loadGoogleAds() {
+  if (typeof window !== 'undefined') {
+    // Google広告のベーススクリプト追加
+    const baseScript = document.createElement('script');
+    baseScript.async = true;
+    baseScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16977427507';
+    document.head.appendChild(baseScript);
+
+    // dataLayerの初期化とgtagの設定
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag('js', new Date());
+    window.gtag('config', 'AW-16977427507');
   }
 }
 
@@ -76,12 +95,14 @@ export const links: LinksFunction = () => [
 declare global {
   interface Window {
     dataLayer: any[];
+    gtag: (...args: any[]) => void;
   }
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadGTM();
+    loadGoogleAds();
   }, []);
 
   return (
