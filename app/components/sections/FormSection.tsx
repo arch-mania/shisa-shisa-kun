@@ -287,6 +287,14 @@ const FormContent = () => {
                 badgeText="無料"
                 type="submit"
                 disabled={isSubmitting || !recaptchaToken}
+                onClick={() => {
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'click', {
+                      event_category: 'link',
+                      event_label: 'submit_application',
+                    });
+                  }
+                }}
               />
             </div>
 

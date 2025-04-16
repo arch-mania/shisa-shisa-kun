@@ -27,6 +27,16 @@ export const FirstViewSection = (): JSX.Element => (
       <br />
       老後に必要な資金を算出し今できる対策を提案します
     </p>
-    <CTAButton text="まずは診断する" />
+    <CTAButton
+      text="まずは診断する"
+      onClick={() => {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'click', {
+            event_category: 'link',
+            event_label: 'Start_diagnosis',
+          });
+        }
+      }}
+    />
   </section>
 );

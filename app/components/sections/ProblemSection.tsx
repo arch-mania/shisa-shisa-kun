@@ -56,7 +56,17 @@ export const ProblemSection = (): JSX.Element => (
           <br />
           <UnderlinedText>「なんとなく」から抜け出そう。</UnderlinedText>
         </p>
-        <CTAButton text="まずは診断する" />
+        <CTAButton
+          text="まずは診断する"
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.gtag) {
+              window.gtag('event', 'click', {
+                event_category: 'link',
+                event_label: 'Start_diagnosis',
+              });
+            }
+          }}
+        />
       </div>
     </div>
   </section>

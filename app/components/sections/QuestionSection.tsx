@@ -182,7 +182,19 @@ export const QuestionSection = (): JSX.Element => {
         </Question>
 
         <div className="flex justify-center px-4">
-          <CTAButton href="#" text="回答を送信して結果を見る" onSubmit={handleSubmit} />
+          <CTAButton
+            href="#"
+            text="回答を送信して結果を見る"
+            onSubmit={handleSubmit}
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.gtag) {
+                window.gtag('event', 'click', {
+                  event_category: 'link',
+                  event_label: 'see_the_results',
+                });
+              }
+            }}
+          />
         </div>
       </section>
       <div className="w-full space-y-4 pt-12 text-center">

@@ -103,7 +103,17 @@ export const SolutionSection = (): JSX.Element => (
           <br />
           ベストな選択をしましょう
         </p>
-        <CTAButton text="まずは診断する" />
+        <CTAButton
+          text="まずは診断する"
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.gtag) {
+              window.gtag('event', 'click', {
+                event_category: 'link',
+                event_label: 'Start_diagnosis',
+              });
+            }
+          }}
+        />
       </div>
       <div className="absolute -top-10 left-1/2 aspect-square w-[90%] -translate-x-1/2 rounded-full bg-white" />
     </div>

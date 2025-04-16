@@ -15,7 +15,17 @@ export const CoverImage = (): JSX.Element => {
         <QuestionLink>
           <img src="/cta.png" alt="CTA" className="w-[487px]" width="487" height="261" />
         </QuestionLink>
-        <CTAButton text="まずは診断する" />
+        <CTAButton
+          text="まずは診断する"
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.gtag) {
+              window.gtag('event', 'click', {
+                event_category: 'link',
+                event_label: 'Start_diagnosis',
+              });
+            }
+          }}
+        />
       </div>
     </div>
   );
