@@ -4,28 +4,34 @@ type EmailData = {
   to: string;
   subject: string;
   text: string;
+  html?: string;
+  from?: string;
 };
 
-export const sendEmail = async ({ to, subject, text }: EmailData) => {
+export const sendEmail = async ({ to, subject, text, html, from }: EmailData) => {
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: true,
+    service: 'gmail',
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
     },
   });
 
   try {
     await transporter.verify();
 
-    const result = await transporter.sendMail({
-      from: process.env.MAIL_FROM,
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: from || process.env.GMAIL_USER,
       to,
       subject,
       text,
-    });
+    };
+
+    if (html) {
+      mailOptions.html = html;
+    }
+
+    const result = await transporter.sendMail(mailOptions);
 
     console.log('Email sent successfully:', result);
     return result;

@@ -34,10 +34,8 @@ const calculateBirthYear = (age: number): number => {
 export async function saveContactForm(formData: ContactFormData) {
   try {
     // 環境変数からメール設定を取得
-    const emailHost = process.env.SMTP_HOST || 'smtp.example.com';
-    const emailPort = parseInt(process.env.SMTP_PORT || '587', 10);
-    const emailUser = process.env.SMTP_USER || 'user@example.com';
-    const emailPass = process.env.SMTP_PASS || 'password';
+    const emailUser = process.env.GMAIL_USER || 'user@gmail.com';
+    const emailPass = process.env.GMAIL_APP_PASSWORD || 'app_password';
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
 
     // 開発環境かどうかを確認（NODE_ENVが設定されていない場合は開発環境とみなす）
@@ -172,18 +170,19 @@ MAIL：info@ltlx.jp
     } else {
       // 本番環境では実際にメールを送信
       const transporter = nodemailer.createTransport({
-        host: emailHost,
-        port: emailPort,
-        secure: emailPort === 465,
+        service: 'Gmail',
         auth: {
           user: emailUser,
           pass: emailPass,
+        },
+        tls: {
+          rejectUnauthorized: false,
         },
       });
 
       // 管理者向けメールを送信
       await transporter.sendMail({
-        from: `"シサシサくん" <${emailUser}>`,
+        from: `"シサシサくん" <${adminEmail}>`,
         to: adminEmail,
         subject: `【反響営業】資産を試算「シサシサくん」からのお問い合わせ`,
         text: adminMailText,
@@ -191,7 +190,7 @@ MAIL：info@ltlx.jp
 
       // 顧客向け自動返信メールを送信
       await transporter.sendMail({
-        from: `"LIVE THE LIFE株式会社" <${emailUser}>`,
+        from: `"LIVE THE LIFE株式会社" <${adminEmail}>`,
         to: formData.email,
         subject: '【資産を試算「シサシサくん」】お問い合わせを承りました',
         text: customerMailText,
