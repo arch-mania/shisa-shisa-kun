@@ -20,13 +20,6 @@ export const Footer = (): JSX.Element => (
           会社概要
         </a>
       </div>
-      <img
-        className="h-6 w-[181px] object-cover"
-        alt="Company logo"
-        src="/logo.svg"
-        width={181}
-        height={24}
-      />
     </div>
   </footer>
 );
